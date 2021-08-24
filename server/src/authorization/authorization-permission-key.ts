@@ -14,4 +14,7 @@ export const enum PermissionKey {
     CreateRole = 'CreateRole',
     UpdateRole = 'UpdateRole',
     DeleteRole = 'DeleteRole',
+
+    SignUp='SignUp',
+    LogIn='LogIn'
   }

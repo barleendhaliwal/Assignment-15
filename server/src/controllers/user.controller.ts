@@ -49,6 +49,7 @@ export class UserController {
 
     }
   })
+  @authorize({permissions:[PermissionKey.SignUp]})
   async signUp(@requestBody() userData: User) {
 
 
@@ -90,6 +91,7 @@ export class UserController {
 
     }
   })
+  @authorize({permissions:[PermissionKey.LogIn]})
   async login(@requestBody(CredentialsRequestBody) credentials: Credentials): Promise<{ token: string }> {
 
     //check if user is valid

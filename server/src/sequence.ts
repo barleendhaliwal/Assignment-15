@@ -25,6 +25,7 @@ import { UserServiceBindings, TokenServiceBindings } from './keys';
 import { UserRepository, RoleRepository } from './repositories';
 import { MyCustomUserService } from './services/customUser.service';
 import { Role, User } from './models';
+import { PermissionKey } from './authorization/authorization-permission-key';
 
 export class MySequence implements SequenceHandler {
     constructor(
@@ -57,7 +58,8 @@ export class MySequence implements SequenceHandler {
             request.body = args[args.length - 1];
 
             console.log("hit", request.headers);
-            let permissions: any = ["general"];
+            //Giving each user permission to signup and login
+            let permissions: any = [PermissionKey.SignUp,PermissionKey.LogIn];
 
             if (request.method == "OPTIONS") {
                 response.status(200);
@@ -70,13 +72,8 @@ export class MySequence implements SequenceHandler {
 
                 const user: User = await this.userRepository.findById(userProfile.id);
 
-                //get the role permissions from user 
-
-                // "generalAuth",
-                // "advancedAuth",
-                // "completeAuth"
-
                 const role: Role = await this.roleRepository.findById(user.roleId);
+                console.log(role)
 
                 console.log("role", role)
                 if (role.permissions.length>0) {
