@@ -1,0 +1,18 @@
+<form style="padding: 2%;" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" class="form-control" id="loginEmail" placeholder="Enter email" [(ngModel)]="credentials.email" name="loginEmail">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" class="form-control" id="loginPassword" placeholder="Password" [(ngModel)]="credentials.password" name="loginPassword">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <br>
+    <br>
+    <a routerLink="/register">Register Instead ?</a>
+
+</form>

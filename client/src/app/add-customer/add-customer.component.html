@@ -1,0 +1,54 @@
+<div class="container-lg">
+
+    <form [formGroup]="addCustomerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="AddCustomerName">Name</label>
+            <input class="form-control" id="AddCustomerName" formControlName="name">
+
+            <div *ngIf="addCustomerForm.controls['name'].invalid && (addCustomerForm.controls['name'].dirty || addCustomerForm.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="addCustomerForm.controls['name'].errors?.required">
+                    Name is required.
+                </div>
+                <div *ngIf="addCustomerForm.controls['name'].errors?.minlength">
+                    Name must be at least 3 characters long.
+                </div>
+            </div>
+
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="AddCustomerAddress">Address</label>
+            <input class="form-control" id="AddCustomerAddress" formControlName="address">
+
+            <div *ngIf="addCustomerForm.controls['address'].invalid && (addCustomerForm.controls['address'].dirty || addCustomerForm.controls['address'].touched)" class="alert alert-danger">
+                <div *ngIf="addCustomerForm.controls['address'].errors?.required">
+                    Address is required.
+                </div>
+                <div *ngIf="addCustomerForm.controls['address'].errors?.minlength">
+                    Address must be at least 10 characters long.
+                </div>
+            </div>
+
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="AddCustomerWebsite">Website</label>
+            <input class="form-control" id="AddCustomerWebsite" formControlName="website">
+
+            <div *ngIf="addCustomerForm.controls['website'].invalid && (addCustomerForm.controls['website'].dirty || addCustomerForm.controls['website'].touched)" class="alert alert-danger">
+                <div *ngIf="addCustomerForm.controls['website'].errors?.required">
+                    Website is required.
+                </div>
+            </div>
+
+            <br>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary" [disabled]="!addCustomerForm.valid">Submit</button>
+    </form>
+
+</div>

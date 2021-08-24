@@ -1,0 +1,37 @@
+<div *ngIf="!editable; then NonEditableContent else editableContent"></div>
+<ng-template #NonEditableContent>
+    <td id="row{{rowNumber}}Id" #id> {{user.id}}</td>
+    <td id="row{{rowNumber}}FirstName">{{user.firstName}}</td>
+    <td id="row{{rowNumber}}MiddleName">{{user.middleName}}</td>
+    <td id="row{{rowNumber}}LastName">{{user.lastName}}</td>
+    <td id="row{{rowNumber}}Email">{{user.email}}</td>
+    <td id="row{{rowNumber}}PhoneNumber">{{user.phoneNumber}}</td>
+    <td id="row{{rowNumber}}Role">{{eRole[user.roleId]}}</td>
+    <td id="row{{rowNumber}}Address">{{user.address}}</td>
+    <td id="row{{rowNumber}}CustomerName">{{user.customer.name}}</td>
+
+</ng-template>
+<ng-template #editableContent>
+
+    <td class="highlight" id="row{{rowNumber}}Id" #id> {{user.id}}</td>
+    <td class="highlight" id="row{{rowNumber}}FirstName" contenteditable="true">{{user.firstName}}</td>
+    <td class="highlight" id="row{{rowNumber}}MiddleName" contenteditable="true">{{user.middleName}}</td>
+    <td class="highlight" id="row{{rowNumber}}LastName" contenteditable="true">{{user.lastName}}</td>
+    <td class="highlight" id="row{{rowNumber}}Email" contenteditable="true">{{user.email}}</td>
+    <td class="highlight" id="row{{rowNumber}}PhoneNumber" contenteditable="true">{{user.phoneNumber}}</td>
+    <td class="highlight" id="row{{rowNumber}}Role">
+        <select class="highlight" [(ngModel)]='editSelectedRole'>
+            <option value="0">{{eRole[0]}}</option>
+            <option value="1">{{eRole[1]}}</option>
+            <option value="2">{{eRole[2]}}</option>
+        </select>
+    </td>
+    <td class="highlight" id="row{{rowNumber}}Address" contenteditable="true">{{user.address}}</td>
+    <td class="highlight" contenteditable="true" id="row{{rowNumber}}CustomerName">{{user.customer.name}}</td>
+
+</ng-template>
+<td><button class=" " (click)="editRow() ">edit</button></td>
+<td><button class=" " (click)="deleteRow() ">delete</button></td>
+
+<td *ngIf='editable' (click)="saveRow() "><button>save</button></td>
+<td *ngIf='editable' (click)="cancelRow() "> <button>cancel</button></td>

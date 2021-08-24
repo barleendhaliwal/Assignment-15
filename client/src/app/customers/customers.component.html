@@ -1,0 +1,9 @@
+<h1 style="text-align:center;  font-style:italic; text-decoration: underline; font-size:xx-large; ">Customer List</h1>
+<div style="padding-left: 2%;">
+
+    <button class="btn btn-outline-secondary" (click)="getCustomers()">Refresh</button>
+    <br><br><br><br>
+</div>
+<div style="padding-left: 2%; padding-right: 2%;">
+    <app-customer-row *ngFor="let customer of customers;let i = index" [customer]="customer" [customerNumber]="i" (refreshEvent)='getCustomers()'></app-customer-row>
+</div>

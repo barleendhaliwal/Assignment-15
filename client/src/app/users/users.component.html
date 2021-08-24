@@ -1,0 +1,3 @@
+<button class="btn btn-outline-secondary" (click)="getUsers()">Refresh</button>
+<br><br><br>
+<app-table [users]='users' (refreshEvent)="getUsers()"></app-table>
