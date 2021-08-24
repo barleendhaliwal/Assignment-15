@@ -52,12 +52,12 @@ export class MySequence implements SequenceHandler {
             response.header('Access-Control-Allow-Origin', '*');
             response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             response.header('Access-Control-Allow-Methods', '*');
-            // response.status(200);
+            
             const route = this.findRoute(request);
             const args = await this.parseParams(request, route);
             request.body = args[args.length - 1];
 
-            console.log("hit", request.headers);
+           
             //Giving each user permission to signup and login
             let permissions: any = [PermissionKey.SignUp,PermissionKey.LogIn];
 
@@ -73,9 +73,7 @@ export class MySequence implements SequenceHandler {
                 const user: User = await this.userRepository.findById(userProfile.id);
 
                 const role: Role = await this.roleRepository.findById(user.roleId);
-                console.log(role)
 
-                console.log("role", role)
                 if (role.permissions.length>0) {
                     permissions = [...permissions, ...role.permissions]
                 }
@@ -84,13 +82,10 @@ export class MySequence implements SequenceHandler {
 
             }
 
-            console.log("permissions", permissions);
             const isAccessAllowed: boolean = await this.checkAuthorisation(
-                permissions, // do authUser.permissions if using method #1
+                permissions, 
                 request,
             );
-
-            console.log("isaccess-allowed", isAccessAllowed);
 
             if (!isAccessAllowed) {
                 throw new HttpErrors.Forbidden(AuthorizeErrorKeys.NotAllowedAccess);
