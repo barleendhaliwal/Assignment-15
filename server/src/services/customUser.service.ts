@@ -8,22 +8,21 @@ import { inject } from '@loopback/core';
 import { BcryptHasher } from './hash.password.bcrypt';
 import { PasswordHasherBindings } from '../keys';
 
-export class MyCustomUserService implements UserService<User, Credentials>{
+export class MyCustomUserService {
 
     constructor(@repository(UserRepository) public userRepository: UserRepository, @inject(PasswordHasherBindings.PASSWORD_HASHER) public hasher: BcryptHasher
     ) {
 
     }
-    async verifyCredentials(credentials: Credentials): Promise<User> {
+    async verifyPassword(username:string,password:string): Promise<User> {
         const foundUser = await this.userRepository.findOne({
             where: {
-                email: credentials.email
-            }
+                email: username            }
         })
         if (!foundUser) {
-            throw new HttpErrors.NotFound(`No user with this email ${credentials.email} `)
+            throw new HttpErrors.NotFound(`No user with this email ${username} `)
         }
-        const passwordMatched = await this.hasher.comparePassword(credentials.password, foundUser.password)
+        const passwordMatched = await this.hasher.comparePassword(password, foundUser.password)
         if (!passwordMatched) {
             throw new HttpErrors.Unauthorized("Password is not Valid");
         }
@@ -38,9 +37,5 @@ export class MyCustomUserService implements UserService<User, Credentials>{
         }
 
     }
-    log(){
-        console.log(' zsdncvksn')
-    }
-    
 
 }

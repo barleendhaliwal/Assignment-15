@@ -25,11 +25,11 @@ import { inject } from '@loopback/core';
 import { BcryptHasher } from '../services/hash.password.bcrypt';
 import { CredentialsRequestBody } from './specs/user.controller.spec';
 import { JWTService } from '../services/jwt.service';
-import { authenticate } from '@loopback/authentication'
 import { UserServiceBindings, PasswordHasherBindings, TokenServiceBindings } from '../keys';
 import { MyCustomUserService } from '../services/customUser.service';
 import { authorize } from 'loopback4-authorization';
 import { PermissionKey } from '../authorization/authorization-permission-key';
+import { authenticate, AuthenticationBindings, STRATEGY } from 'loopback4-authentication';
 
 export class UserController {
 
@@ -91,18 +91,16 @@ export class UserController {
 
     }
   })
+  @authenticate(STRATEGY.LOCAL)
   @authorize({permissions:[PermissionKey.LogIn]})
-  async login(@requestBody(CredentialsRequestBody) credentials: Credentials): Promise<{ token: string }> {
+  async login(@requestBody(CredentialsRequestBody) credentials: Credentials,@inject(AuthenticationBindings.CURRENT_USER) getCurrentUser:any): Promise<{ token: string }> {
 
-    //check if user is valid
-    const user = await this.myCustomUserService.verifyCredentials(credentials)
-    const userProfile = this.myCustomUserService.convertToUserProfile(user)
     //generate token
-    const token = await this.jwtService.generateToken(userProfile)
+    const token = await this.jwtService.generateToken(getCurrentUser)
     return { token: token }
   }
   @post('/users')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.CreateUser] })
   @response(200, {
     description: 'User model instance',
@@ -125,7 +123,7 @@ export class UserController {
   }
 
   @get('/users/count')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.ViewUser] })
   @response(200, {
     description: 'User model count',
@@ -138,7 +136,7 @@ export class UserController {
   }
 
   @get('/users')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.ViewUser] })
   @response(200, {
     description: 'Array of User model instances',
@@ -158,7 +156,7 @@ export class UserController {
   }
 
   @patch('/users')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.UpdateUser] })
   @response(200, {
     description: 'User PATCH success count',
@@ -179,7 +177,7 @@ export class UserController {
   }
 
   @get('/users/{id}')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.ViewUser] })
   @response(200, {
     description: 'User model instance',
@@ -197,7 +195,7 @@ export class UserController {
   }
 
   @patch('/users/{id}')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.UpdateUser] })
   @response(204, {
     description: 'User PATCH success',
@@ -217,7 +215,7 @@ export class UserController {
   }
 
   @put('/users/{id}')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.UpdateUser] })
   @response(204, {
     description: 'User PUT success',
@@ -230,7 +228,7 @@ export class UserController {
   }
 
   @del('/users/{id}')
-  @authenticate('jwt')
+  @authenticate(STRATEGY.BEARER)
   @authorize({ permissions: [PermissionKey.DeleteUser] })
   @response(204, {
     description: 'User DELETE success',

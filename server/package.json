@@ -64,6 +64,7 @@
     "isemail": "^3.2.0",
     "jsonwebtoken": "^8.5.1",
     "loopback-connector-postgresql": "^5.4.0",
+    "loopback4-authentication": "^4.6.0",
     "loopback4-authorization": "^3.3.0",
     "tslib": "^2.0.0"
   },

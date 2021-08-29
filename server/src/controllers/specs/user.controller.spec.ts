@@ -2,9 +2,9 @@ import {  SchemaObject } from "@loopback/rest"
 
 export const CredentialSchema:SchemaObject={
     type:'object',
-    required:["email","password"],
+    required:["username","password"],
     properties:{
-        email:{
+        username:{
             type: 'string',
             format:'email',
         },

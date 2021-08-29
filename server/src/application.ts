@@ -11,7 +11,6 @@ import path from 'path';
 import { MySequence } from './sequence';
 import { BcryptHasher } from './services/hash.password.bcrypt';
 import { JWTService } from './services/jwt.service';
-import { AuthenticationComponent, registerAuthenticationStrategy } from '@loopback/authentication';
 import { TokenServiceConstants, TokenServiceBindings, PasswordHasherBindings, UserServiceBindings } from './keys'
 // import { JWTStrategy } from './authentication.strategies/jwt.strategy'
 import { JWTAuthenticationComponent } from '@loopback/authentication-jwt'
@@ -20,6 +19,9 @@ import { MyCustomUserService } from './services/customUser.service';
 import { JWTStrategy } from './authentication.strategies/jwt.strategy';
 import { AuthorizationBindings, AuthorizationComponent } from 'loopback4-authorization';
 export { ApplicationConfig };
+import { AuthenticationComponent, Strategies } from 'loopback4-authentication';
+import { LocalPasswordVerifyProvider } from './services/localPassowrdVerifyProvider';
+import { BearerTokenVerifyProvider } from './services/bearerTokenVerifyProvider';
 
 export class Server extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -30,17 +32,17 @@ export class Server extends BootMixin(
     //Set up bindings
     this.setUpBindings()
 
-    // Mount authentication system
+
+    // Add authentication component
     this.component(AuthenticationComponent);
+    // Customize authentication verify handlers
+    this.bind(Strategies.Passport.LOCAL_PASSWORD_VERIFIER).toProvider(
+      LocalPasswordVerifyProvider,
+    );
+    this.bind(Strategies.Passport.BEARER_TOKEN_VERIFIER).toProvider(
+      BearerTokenVerifyProvider,
+    );
 
-    //to use custom strategy
-    this.add(createBindingFromClass(JWTStrategy));
-    registerAuthenticationStrategy(this, JWTStrategy);
-
-
-    // Mount jwt component
-    // this.component(JWTAuthenticationComponent);
-    // this.dataSource(DbDataSource);
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -71,7 +73,7 @@ export class Server extends BootMixin(
     };
   }
   setUpBindings() {
-    
+
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher)
     this.bind(PasswordHasherBindings.ROUNDS).to(10)
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyCustomUserService)
@@ -79,8 +81,8 @@ export class Server extends BootMixin(
     this.bind(TokenServiceBindings.TOKEN_SECRET).to(TokenServiceConstants.TOKEN_SECRET_VALUE)
     this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(TokenServiceConstants.TOKEN_EXPIRES_IN)
 
-   
+
 
   }
-  
+
 }

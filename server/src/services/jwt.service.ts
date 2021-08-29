@@ -14,14 +14,15 @@ export class JWTService implements TokenService {
     public readonly jwtSecret: string;
     @inject(TokenServiceBindings.TOKEN_EXPIRES_IN)
     public readonly jwtExpiresIn: string;
-    async generateToken(userProfile: UserProfile): Promise<string> {
+    async generateToken(userProfile: any): Promise<string> {
 
         if (!userProfile) {
             throw new HttpErrors.Unauthorized("Error while generating token: User Profile is null")
         }
         let token = '';
         try {
-            token = signAsync(userProfile, this.jwtSecret, {
+           
+            token = signAsync(userProfile.toJSON(), this.jwtSecret, {
                 expiresIn: this.jwtExpiresIn
             })
         }
@@ -37,7 +38,6 @@ export class JWTService implements TokenService {
         let userProfile: UserProfile
         try {
             const decryptedToken = await verifyAsync(token, this.jwtSecret)
-            console.log(decryptedToken.id)
             userProfile = {
                 id: decryptedToken.id,
                 [securityId]: "",

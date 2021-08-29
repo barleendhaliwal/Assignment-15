@@ -2,6 +2,7 @@ import {Entity, model, property, belongsTo} from '@loopback/repository';
 import {Customer} from './customer.model';
 import {Role} from './role.model';
 import {Permissions} from 'loopback4-authorization'
+import { IAuthUser } from 'loopback4-authentication';
 @model({
   settings: {
     foreignKeys: {
@@ -21,7 +22,7 @@ import {Permissions} from 'loopback4-authorization'
   },
 })
 
-export class User extends Entity  {
+export class User extends Entity  implements IAuthUser{
   @property({
     type: 'number',
     id: true,
@@ -86,6 +87,7 @@ export class User extends Entity  {
   constructor(data?: Partial<User>) {
     super(data);
   }
+  username: string;
 }
 
 export interface UserRelations {

@@ -1,4 +1,4 @@
-import { authenticate } from '@loopback/authentication';
+
 import {
   repository,
 } from '@loopback/repository';
@@ -7,6 +7,7 @@ import {
   get,
   getModelSchemaRef,
 } from '@loopback/rest';
+import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
 import { PermissionKey } from '../authorization/authorization-permission-key';
 import {
@@ -14,12 +15,13 @@ import {
   Customer,
 } from '../models';
 import {UserRepository} from '../repositories';
-@authenticate('jwt')
+
 export class UserCustomerController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
   ) { }
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.ViewCustomer]})
   @get('/users/{id}/customer', {
     responses: {

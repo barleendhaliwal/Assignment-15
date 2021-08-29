@@ -1,4 +1,4 @@
-import { authenticate } from '@loopback/authentication';
+
 import {
   Count,
   CountSchema,
@@ -16,6 +16,7 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
+import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
 import { PermissionKey } from '../authorization/authorization-permission-key';
 import {
@@ -23,11 +24,11 @@ import {
   User,
 } from '../models';
 import {RoleRepository} from '../repositories';
-@authenticate('jwt')
 export class RoleUserController {
   constructor(
     @repository(RoleRepository) protected roleRepository: RoleRepository,
   ) { }
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.ViewUser]})
   @get('/roles/{id}/users', {
     responses: {
@@ -47,6 +48,7 @@ export class RoleUserController {
   ): Promise<User[]> {
     return this.roleRepository.users(id).find(filter);
   }
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.CreateUser]})
   @post('/roles/{id}/users', {
     responses: {
@@ -72,6 +74,7 @@ export class RoleUserController {
   ): Promise<User> {
     return this.roleRepository.users(id).create(user);
   }
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.UpdateUser]})
   @patch('/roles/{id}/users', {
     responses: {
@@ -95,6 +98,7 @@ export class RoleUserController {
   ): Promise<Count> {
     return this.roleRepository.users(id).patch(user, where);
   }
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.DeleteUser]})
   @del('/roles/{id}/users', {
     responses: {

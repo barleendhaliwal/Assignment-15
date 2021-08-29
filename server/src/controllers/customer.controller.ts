@@ -1,4 +1,4 @@
-import { authenticate } from '@loopback/authentication';
+
 import {
   Count,
   CountSchema,
@@ -18,12 +18,13 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
+import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { authorize } from 'loopback4-authorization';
 import { PermissionKey } from '../authorization/authorization-permission-key';
 import {Customer} from '../models';
 import {CustomerRepository} from '../repositories';
 
-@authenticate('jwt')
+
 export class CustomerController {
   constructor(
     @repository(CustomerRepository)
@@ -31,6 +32,7 @@ export class CustomerController {
   ) {}
 
   @post('/customers')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.CreateCustomer]})
   @response(200, {
     description: 'Customer model instance',
@@ -53,6 +55,7 @@ export class CustomerController {
   }
 
   @get('/customers/count')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.ViewCustomer]})
   @response(200, {
     description: 'Customer model count',
@@ -65,6 +68,7 @@ export class CustomerController {
   }
 
   @get('/customers')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.ViewCustomer]})
   @response(200, {
     description: 'Array of Customer model instances',
@@ -84,6 +88,7 @@ export class CustomerController {
   }
 
   @patch('/customers')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.UpdateCustomer]})
   @response(200, {
     description: 'Customer PATCH success count',
@@ -104,6 +109,7 @@ export class CustomerController {
   }
 
   @get('/customers/{id}')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.ViewCustomer]})
   @response(200, {
     description: 'Customer model instance',
@@ -121,6 +127,7 @@ export class CustomerController {
   }
 
   @patch('/customers/{id}')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.UpdateCustomer]})
   @response(204, {
     description: 'Customer PATCH success',
@@ -140,6 +147,7 @@ export class CustomerController {
   }
 
   @put('/customers/{id}')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.UpdateCustomer]})
   @response(204, {
     description: 'Customer PUT success',
@@ -152,6 +160,7 @@ export class CustomerController {
   }
 
   @del('/customers/{id}')
+  @authenticate(STRATEGY.BEARER)
   @authorize({permissions:[PermissionKey.DeleteCustomer]})
   @response(204, {
     description: 'Customer DELETE success',

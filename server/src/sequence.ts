@@ -26,6 +26,7 @@ import { UserRepository, RoleRepository } from './repositories';
 import { MyCustomUserService } from './services/customUser.service';
 import { Role, User } from './models';
 import { PermissionKey } from './authorization/authorization-permission-key';
+import { AuthenticateFn, AuthenticationBindings } from 'loopback4-authentication';
 
 export class MySequence implements SequenceHandler {
     constructor(
@@ -42,27 +43,29 @@ export class MySequence implements SequenceHandler {
         public userService: MyCustomUserService,
         @inject(TokenServiceBindings.TOKEN_SERVICE)
         public jwtService: JWTService,
+        @inject(AuthenticationBindings.USER_AUTH_ACTION)
+    protected authenticateRequest: AuthenticateFn<User>,
     ) { }
 
     async handle(context: RequestContext) {
-        const requestTime = Date.now();
         try {
             const { request, response } = context;
 
             response.header('Access-Control-Allow-Origin', '*');
-            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            response.header('Access-Control-Allow-Methods', '*');
+            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,authorization');
+            response.header('Access-Control-Allow-Methods','*')
             
             const route = this.findRoute(request);
             const args = await this.parseParams(request, route);
             request.body = args[args.length - 1];
-
+            const authUser: User = await this.authenticateRequest(request);
            
             //Giving each user permission to signup and login
             let permissions: any = [PermissionKey.SignUp,PermissionKey.LogIn];
 
             if (request.method == "OPTIONS") {
                 response.status(200);
+                this.send(response, 'ok');
             }
             if (request.headers.authorization) {
 

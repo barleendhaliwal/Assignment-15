@@ -4,6 +4,7 @@ import { JWTService } from "./services/jwt.service"
 import { UserService, TokenService } from '@loopback/authentication'
 import { User } from "./models/user.model"
 import { Credentials } from "./repositories/user.repository"
+import { MyCustomUserService } from "./services/customUser.service"
 
 export namespace TokenServiceConstants{
     export const TOKEN_SECRET_VALUE='12345678abc'
@@ -22,6 +23,6 @@ export namespace PasswordHasherBindings{
     export const ROUNDS=BindingKey.create<number>('rounds')
 }
 export namespace UserServiceBindings{
-      export const USER_SERVICE=BindingKey.create<UserService<User, Credentials>>('services.user.service')
+      export const USER_SERVICE=BindingKey.create<MyCustomUserService>('services.user.service')
       
 }
