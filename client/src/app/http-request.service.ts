@@ -22,7 +22,12 @@ export class HttpRequestService {
   }
   login(credentials: { email: string, password: string }) {
 
-    return this.http.post(this.userBaseUrl + `/login`, credentials)
+    const credentialsToSend={
+      username:credentials.email,
+      password:credentials.password
+    }
+    console.log(credentialsToSend)
+    return this.http.post(this.userBaseUrl + `/login`, credentialsToSend)
   }
   signUp(data: any) {
     data.customerId = +data.customerId

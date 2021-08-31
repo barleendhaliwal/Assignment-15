@@ -79,7 +79,6 @@ export class RowComponent implements OnInit {
       const customer=response[0]
       const editData:any={id:+id,firstName:firstName,middleName:middleName, lastName:lastName, email:email, phoneNumber:phoneNumber, roleId:roleId,address:address,customerId:customer.id}
       this.httpService.editUser(this.user.id,editData).subscribe(response=>{
-        console.log(response)
          alert(`\nEdited User with id = ${id} Successfully!`)
          this.refreshEvent.emit();
       }, error => {

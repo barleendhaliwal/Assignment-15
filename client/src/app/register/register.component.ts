@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import Role from '../enum';
 import { HttpRequestService } from '../http-request.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,7 @@ export class RegisterComponent implements OnInit {
 
   eRole = Role
 
-  constructor(private fb: FormBuilder, private httpService: HttpRequestService) {
+  constructor(private fb: FormBuilder, private httpService: HttpRequestService,private router:Router) {
   
   }
 
@@ -33,7 +34,8 @@ export class RegisterComponent implements OnInit {
     
     this.httpService.signUp(this.addUserForm.value).subscribe((response:any) => {
       console.log(response)
-      alert(`\nNew User with id = ${response.id} Successfully ! See Show Users to see Changes !`)
+      alert(`\nNew User with id = ${response.id} Successfully ! Log in to see Changes !`)
+      this.router.navigateByUrl('/login');
     }, error => {
 
       alert(error)
