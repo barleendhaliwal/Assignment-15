@@ -1,0 +1,18 @@
+.mat-expansion-panel-header-title {
+    color: black
+}
+
+.mat-expansion-panel {
+    color: black;
+    background-color: rgb(240, 233, 233);
+    width: 100%
+}
+
+.mat-expansion-panel:hover {
+    color: black;
+    background-color: rgb(255, 255, 255);
+}
+
+.highlight {
+    background-color: white;
+}

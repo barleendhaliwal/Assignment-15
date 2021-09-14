@@ -1,0 +1,134 @@
+<div class="container-lg">
+
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="AddUserFirstName">First Name</label>
+            <input class="form-control" id="AddUserFirstName" formControlName="firstName">
+
+            <div *ngIf="addUserForm.controls['firstName'].invalid && (addUserForm.controls['firstName'].dirty || addUserForm.controls['firstName'].touched)" class="alert alert-danger">
+                <div *ngIf="addUserForm.controls['firstName'].errors?.required">
+                    First Name is required.
+                </div>
+                <div *ngIf="addUserForm.controls['firstName'].errors?.minlength">
+                    First Name must be at least 3 characters long.
+                </div>
+            </div>
+
+            <br>
+        </div>
+
+        <div class="form-group">
+            <label for="AddUserMiddleName">Middle Name</label>
+            <input class="form-control" id="AddUserMiddleName" formControlName="middleName">
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserLastName">Last Name</label>
+            <input class="form-control" id="AddUserLastName" formControlName="lastName">
+            <div *ngIf="addUserForm.controls['lastName'].invalid && (addUserForm.controls['lastName'].dirty || addUserForm.controls['lastName'].touched)" class="alert alert-danger">
+
+                <div *ngIf="addUserForm.controls['lastName'].errors?.required">
+                    Last Name is required.
+                </div>
+                <div *ngIf="addUserForm.controls['lastName'].errors?.minlength">
+                    Last Name must be at least 3 characters long.
+                </div>
+
+            </div>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserEmail">Email address</label>
+            <input type="email" class="form-control" id="AddUserEmail" formControlName="email">
+            <div *ngIf="addUserForm.controls['email'].invalid && (addUserForm.controls['email'].dirty || addUserForm.controls['email'].touched)" class="alert alert-danger">
+
+
+                <div *ngIf="addUserForm.controls['email'].errors?.required">
+                    Email is required.
+                </div>
+
+            </div>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserPassword">Password</label>
+            <input class="form-control" type="password" id="AddUserPassword" formControlName="password">
+
+            <div *ngIf="addUserForm.controls['password'].invalid && (addUserForm.controls['password'].dirty || addUserForm.controls['password'].touched)" class="alert alert-danger">
+                <div *ngIf="addUserForm.controls['password'].errors?.required">
+                    Password is required.
+                </div>
+                <div *ngIf="addUserForm.controls['password'].errors?.minlength">
+                    Password must be at least 8 characters long.
+                </div>
+            </div>
+
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserPhoneNumber">Phone Number</label>
+            <input type="tel" class="form-control" id="AddUserPhoneNumber" formControlName="phoneNumber">
+            <div *ngIf="addUserForm.controls['phoneNumber'].invalid && (addUserForm.controls['phoneNumber'].dirty || addUserForm.controls['phoneNumber'].touched)" class="alert alert-danger">
+
+
+                <div *ngIf="addUserForm.controls['phoneNumber'].errors?.required">
+                    Phone Number is required.
+                </div>
+                <div *ngIf="addUserForm.controls['phoneNumber'].errors?.pattern">
+                    Phone Number must be 10 digits
+                </div>
+
+            </div>
+            <br>
+
+        </div>
+        <div class="form-group">
+            <label for="AddUserRole">Role</label>
+            <select class="form-control" id="AddUserRole" formControlName="roleId">
+                <option value="0">{{eRole[0]}}</option>
+                <option value="1">{{eRole[1]}}</option>
+                <option value="2">{{eRole[2]}}</option>
+            </select>
+            <div *ngIf="addUserForm.controls['roleId'].invalid && (addUserForm.controls['roleId'].dirty || addUserForm.controls['roleId'].touched)" class="alert alert-danger">
+
+
+                <div *ngIf="addUserForm.controls['roleId'].errors?.required">
+                    Role is required.
+                </div>
+
+            </div>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserAddress">Address</label>
+            <input class="form-control" id="AddUserAddress" formControlName="address">
+            <div *ngIf="addUserForm.controls['address'].invalid && (addUserForm.controls['address'].dirty || addUserForm.controls['address'].touched)" class="alert alert-danger">
+
+
+                <div *ngIf="addUserForm.controls['address'].errors?.required">
+                    Address is required.
+                </div>
+
+            </div>
+            <br>
+        </div>
+        <div class="form-group">
+            <label for="AddUserCustomerId">Customer Id</label>
+            <input class="form-control" id="AddUserCustomerId" formControlName="customerId">
+            <div *ngIf="addUserForm.controls['customerId'].invalid && (addUserForm.controls['customerId'].dirty || addUserForm.controls['customerId'].touched)" class="alert alert-danger">
+
+
+                <div *ngIf="addUserForm.controls['customerId'].errors?.required">
+                    Customer Id is required.
+                </div>
+
+            </div>
+            <br>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!addUserForm.valid">Submit</button>
+    </form>
+
+    <a routerLink="">Login Instead?</a>
+
+</div>

@@ -1,0 +1,25 @@
+<table class="table table-hover">
+    <tr style="font-style: italic;">
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Middle Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Role</th>
+        <th>Address</th>
+        <th>Customer</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th *ngIf="editable">Save</th>
+        <th *ngIf="editable">Cancel</th>
+    </tr>
+    <tbody>
+
+
+        <tr app-row (mode)="changeHeader($event)" *ngFor="let user of users; let i = index" [user]="user" [rowNumber]="i" (refreshEvent)="emitRefreshEventtoParent()"></tr>
+
+    </tbody>
+
+
+</table>

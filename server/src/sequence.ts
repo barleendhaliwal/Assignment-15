@@ -1,0 +1,103 @@
+import { JWTService } from './services/jwt.service';
+import { inject } from '@loopback/context';
+import { repository } from '@loopback/repository';
+import {
+    FindRoute,
+    HttpErrors,
+    InvokeMethod,
+    ParseParams,
+    Reject,
+    RequestContext,
+    RestBindings,
+    Send,
+    SequenceHandler,
+    MiddlewareSequence,
+    SequenceActions
+} from '@loopback/rest';
+import { UserProfile } from '@loopback/security';
+import {
+    AuthorizationBindings,
+    AuthorizeErrorKeys,
+    AuthorizeFn,
+    UserPermissionsFn,
+} from 'loopback4-authorization';
+import { UserServiceBindings, TokenServiceBindings } from './keys';
+import { UserRepository, RoleRepository } from './repositories';
+import { MyCustomUserService } from './services/customUser.service';
+import { Role, User } from './models';
+import { PermissionKey } from './authorization/authorization-permission-key';
+import { AuthenticateFn, AuthenticationBindings } from 'loopback4-authentication';
+
+export class MySequence implements SequenceHandler {
+    constructor(
+        @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
+        @inject(SequenceActions.PARSE_PARAMS) protected parseParams: ParseParams,
+        @inject(SequenceActions.INVOKE_METHOD) protected invoke: InvokeMethod,
+        @inject(SequenceActions.SEND) public send: Send,
+        @inject(SequenceActions.REJECT) public reject: Reject,
+        @repository(UserRepository) protected userRepository: UserRepository,
+        @repository(RoleRepository) protected roleRepository: RoleRepository,
+        @inject(AuthorizationBindings.AUTHORIZE_ACTION)
+        protected checkAuthorisation: AuthorizeFn,
+        @inject(UserServiceBindings.USER_SERVICE)
+        public userService: MyCustomUserService,
+        @inject(TokenServiceBindings.TOKEN_SERVICE)
+        public jwtService: JWTService,
+        @inject(AuthenticationBindings.USER_AUTH_ACTION)
+    protected authenticateRequest: AuthenticateFn<User>,
+    ) { }
+
+    async handle(context: RequestContext) {
+        try {
+            const { request, response } = context;
+
+            response.header('Access-Control-Allow-Origin', '*');
+            response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept,authorization');
+            response.header('Access-Control-Allow-Methods','*')
+            
+            const route = this.findRoute(request);
+            const args = await this.parseParams(request, route);
+            request.body = args[args.length - 1];
+            const authUser: User = await this.authenticateRequest(request);
+           
+            //Giving each user permission to signup and login
+            let permissions: any = [PermissionKey.SignUp,PermissionKey.LogIn];
+
+            if (request.method == "OPTIONS") {
+                response.status(200);
+                this.send(response, 'ok');
+            }
+            if (request.headers.authorization) {
+
+                const userToken = request.headers.authorization.split(" ")[1]; //get token
+
+                const userProfile: UserProfile = await this.jwtService.verifyToken(userToken);
+
+                const user: User = await this.userRepository.findById(userProfile.id);
+
+                const role: Role = await this.roleRepository.findById(user.roleId);
+
+                if (role.permissions.length>0) {
+                    permissions = [...permissions, ...role.permissions]
+                }
+
+
+
+            }
+
+            const isAccessAllowed: boolean = await this.checkAuthorisation(
+                permissions, 
+                request,
+            );
+
+            if (!isAccessAllowed) {
+                throw new HttpErrors.Forbidden(AuthorizeErrorKeys.NotAllowedAccess);
+            }
+
+            const result = await this.invoke(route, args);
+            this.send(response, result);
+        } catch (err) {
+            this.reject(context, err);
+        }
+    }
+}

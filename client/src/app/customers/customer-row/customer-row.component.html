@@ -1,0 +1,57 @@
+<table class="table">
+
+    <div class="expansion-panel-elements">
+        <mat-expansion-panel [expanded]="panelOpenState">
+            <mat-expansion-panel-header [collapsedHeight]="'100px'" [expandedHeight]="'100px'">
+                <mat-panel-title>
+                    <table class="table">
+                        <thead>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Website</th>
+                        </thead>
+                        <tbody style="color:darkred; ">
+                            <tr>
+                                <div *ngIf="!editable; then NonEditableContent else editableContent"></div>
+                                <ng-template #NonEditableContent>
+                                    <td id="row{{customerNumber}}id" style='width: 10%; padding: 0px ;font-weight: bold;'>{{customer.id}}</td>
+                                    <td id="row{{customerNumber}}name" style='width: 30%; padding: 0px ;font-weight: bold;'>{{customer.name}}</td>
+                                    <td id="row{{customerNumber}}address" style='width: 40%; padding: 0px ;font-weight: bold;'>{{customer.address}}
+                                    </td>
+                                    <td id="row{{customerNumber}}website" style='width: 20%;padding: 0px ;font-weight: bold;'>{{customer.website}}
+                                    </td>
+                                </ng-template>
+                                <ng-template #editableContent>
+                                    <td id="row{{customerNumber}}id" style='width: 10%;padding: 0px ;' (click)="$event.stopPropagation();">{{customer.id}}
+                                    </td>
+                                    <td id="row{{customerNumber}}name" class="highlight " contenteditable='true' style='width: 30%;padding: 0px ;background-color: khaki; ' (click)="$event.stopPropagation();">{{customer.name}}</td>
+                                    <td id="row{{customerNumber}}address" class="highlight " contenteditable='true' style='width: 40%;padding: 0px ;background-color: khaki;' (click)="$event.stopPropagation();">{{customer.address}}</td>
+                                    <td id="row{{customerNumber}}website" class="highlight " contenteditable='true' style='width: 20%;padding: 0px ;background-color: khaki;' (click)="$event.stopPropagation();">{{customer.website}}</td>
+
+                                </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <app-table [users]='users' (refreshEvent)="refreshEvent.emit()"></app-table>
+
+        </mat-expansion-panel>
+    </div>
+</table>
+
+<div>
+    <td style="padding-right: 1px; "><button (click)="editCustomer() " class="btn btn-outline-primary ">Edit</button></td>
+    <td style="padding-right: 1px; "><button (click)="deleteCustomer() " class="btn btn-outline-danger ">Delete</button>
+    </td>
+    <td *ngIf="editable " style="padding-right: 1px; "><button (click)="saveCustomer() " class="btn btn-outline-success ">Save</button></td>
+    <td *ngIf="editable " style="padding-right: 1px; "><button (click)="cancelCustomer() " class="btn btn-outline-warning ">Cancel</button></td>
+    <td *ngIf="panelOpenState " style="padding-right: 1px; "><button type="button " (click)="togglePanel() " class="btn btn-outline-dark ">Hide
+            Users</button></td>
+    <td *ngIf="!panelOpenState " style="padding-right: 1px; "><button type="button " (click)="togglePanel() " class="btn btn-outline-dark ">Show
+            Users</button></td>
+</div>
+
+<br>
